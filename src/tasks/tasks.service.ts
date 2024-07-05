@@ -39,8 +39,19 @@ export class TasksService {
   }
 
   deleteTaskById(id: string) {
-    const removeTask = this.tasks.indexOf(this.tasks.find((t) => t.id === id));
-    console.log('Task a supprimer',removeTask);
-    this.tasks.splice(removeTask);
+    const indexTask = this.tasks.indexOf(this.tasks.find((t) => t.id === id));
+    console.log('Task a supprimer', indexTask);
+    this.tasks.splice(indexTask);
+  }
+
+  updateTask(id: string, _createTaskDto: CreateTaskDto): Tasks[] {
+    const task = {
+      id: id,
+      ..._createTaskDto,
+      status: Status.OPEN,
+    };
+    const indexTask = this.tasks.indexOf(this.tasks.find((t) => t.id === id));
+    this.tasks[indexTask] = task;
+    return this.tasks;
   }
 }
