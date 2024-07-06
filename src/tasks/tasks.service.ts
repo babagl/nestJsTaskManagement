@@ -25,10 +25,12 @@ export class TasksService {
     const { status, search } = filteredDto;
     let task = this.getAllTaks();
     if (status) {
+      console.log(status);
       task = task.filter((t) => t.status === status);
     }
 
     if (search) {
+      console.log(search);
       task = task.filter(
         (t) => t.title.includes(search) || t.description.includes(search),
       );

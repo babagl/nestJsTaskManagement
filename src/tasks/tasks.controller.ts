@@ -14,9 +14,9 @@ import {
 import { log } from 'console';
 import { GetTaskFilterDto } from './dto/get_tasks_filtered.dto';
 import { CreateTaskDto } from './dto/tasks.dto';
+import { TaskStatusValidationPipe } from './pipes/task-status-validations.pipes';
 import { Status, Tasks } from './tasks.model';
 import { TasksService } from './tasks.service';
-import { TaskStatusValidationPipe } from './pipes/task-status-validations.pipes';
 @Controller('tasks')
 export class TasksController {
   constructor(private taskService: TasksService) {}
@@ -25,7 +25,7 @@ export class TasksController {
    * @returns la liste des tasks
    */
   @Get()
-  getTasks(@Query() filteredDto: GetTaskFilterDto): Tasks[] {
+  getTasks(@Query(ValidationPipe) filteredDto: GetTaskFilterDto): Tasks[] {
     log(filteredDto);
     if (Object.keys(filteredDto).length) {
       return this.taskService.getTaskWithFiltered(filteredDto);
