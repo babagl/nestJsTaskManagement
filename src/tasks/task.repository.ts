@@ -1,4 +1,10 @@
-import { Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { Task } from './task.entity';
 
-export class TaskRepository extends Repository<Task> {}
+export const TaskRepository = [
+  {
+    provide: 'TASK_REPOSITORY',
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(Task),
+    inject: ['DATA_SOURCE'],
+  },
+];
