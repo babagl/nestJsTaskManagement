@@ -1,6 +1,16 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { log } from 'console';
 import { CreateTaskDto } from './dto/tasks.dto';
+import { Status } from './task-status.enum';
 import { Task } from './task.entity';
 import { TasksService } from './tasks.service';
 @Controller('tasks')
@@ -26,28 +36,23 @@ export class TasksController {
     log(createTaskDto);
     return this.taskService.createTask(createTaskDto);
   }
-  // /**
-  //  * @param id Supprimer la tache selectionner par son id
-  //  */
-  // @Delete('/:id')
-  // removeTask(@Param('id') id: string): void {
-  //   log(id);
-  //   this.taskService.deleteTaskById(id);
-  // }
+  /**
+   * @param id Supprimer la tache selectionner par son id
+   */
+  @Delete('/:id')
+  removeTask(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    log(id);
+    return this.taskService.deleteTaskByID(id);
+  }
 
-  // /**
-  //  * @param id de l'element selectionne
-  //  * @param createTaskDto le task qu'on veut creer
-  //  * @returns le liste de toutes les tasks apres modif
-  //  */
-  // @Put('/:id')
-  // updateTask(
-  //   @Param('id') id: string,
-  //   @Body() createTaskDto: CreateTaskDto,
-  // ): Tasks[] {
-  //   log('id', id, 'task', 'TaksDto', createTaskDto);
-  //   return this.taskService.updateTask(id, createTaskDto);
-  // }
+  @Patch(':id')
+  UpdateTaskStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('status') status: Status,
+  ): Promise<Task> {
+    return this.taskService.UpdateTaskStatus(id, status);
+  }
+
   // /**
   //  * @param id l'id du task au'on veut modifier
   //  * @param status le status qu'on veut modifier
