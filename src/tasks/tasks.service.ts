@@ -1,5 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { CreateTaskDto } from './dto/tasks.dto';
+import { Status } from './task-status.enum';
 import { Task } from './task.entity';
 @Injectable()
 export class TasksService {
@@ -8,6 +10,14 @@ export class TasksService {
     private taskRepository: Repository<Task>,
   ) {}
 
+  async createTask(createTaskDTO: CreateTaskDto):Promise<Task>{
+    const task = new Task();
+    task.title = createTaskDTO.title;
+    task.description = createTaskDTO.description;
+    task.status = Status.OPEN;
+    await task.save();
+    return task;
+  }
   // private tasks: Tasks[] = [
   //   {
   //     id: 'baba',
@@ -44,54 +54,8 @@ export class TasksService {
     if (!found) {
       throw new NotFoundException(`Taks with ID ${id} "Not found`);
     }
-
     return found;
   }
 
-  // getTaskById(id: string): Tasks {
-  //   log(this.tasks.find((t) => t.id === id));
-  //   const found = this.tasks.find((t) => t.id === id);
-  //   if (!found) {
-  //     throw new NotFoundException(`task qui a l'id : ${id} n'existe pas`);
-  //   }
-  //   return found;
-  // }
-
-  // createTask(createTaskDTO: CreateTaskDto) {
-  //   const { title, description } = createTaskDTO;
-  //   const task: Tasks = {
-  //     id: uuid.uid(3),
-  //     title,
-  //     description,
-  //     status: Status.OPEN,
-  //   };
-
-  //   this.tasks.push(task);
-  //   return task;
-  // }
-
-  // deleteTaskById(id: string) {
-  //   const found = this.getTaskById(id);
-  //   if (!found) {
-  //     throw new NotFoundException(`task avec l'id : ${id} n'existe pas`);
-  //   }
-  //   this.tasks = this.tasks.filter((t) => t.id !== found.id);
-  // }
-
-  // updateTask(id: string, _createTaskDto: CreateTaskDto): Tasks[] {
-  //   const task = {
-  //     id: id,
-  //     ..._createTaskDto,
-  //     status: Status.OPEN,
-  //   };
-  //   const indexTask = this.tasks.indexOf(this.tasks.find((t) => t.id === id));
-  //   this.tasks[indexTask] = task;
-  //   return this.tasks;
-  // }
-
-  // updateTaskStatus(id: string, status: Status): Tasks[] {
-  //   const task = this.getTaskById(id);
-  //   task.status = status;
-  //   return this.tasks;
-  // }
+ 
 }

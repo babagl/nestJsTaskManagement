@@ -1,42 +1,30 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { log } from 'console';
+import { CreateTaskDto } from './dto/tasks.dto';
 import { Task } from './task.entity';
 import { TasksService } from './tasks.service';
 @Controller('tasks')
 export class TasksController {
   constructor(private taskService: TasksService) {}
 
-  
   /**
-   *
-   * @returns la liste des tasks
-   */
-  // @Get()
-  // getTasks(@Query(ValidationPipe) filteredDto: GetTaskFilterDto): Tasks[] {
-  //   log(filteredDto);
-  //   if (Object.keys(filteredDto).length) {
-  //     return this.taskService.getTaskWithFiltered(filteredDto);
-  //   } else {
-  //     return this.taskService.getAllTaks();
-  //   }
-  // }
-  // /**
-  //  * @param createTaskDTO prend en parametre les requettes que l'utilisateur a creer et renvoie le task cree
-  //  * @returns le task cree
-  //  */
-  // @Post()
-  // @UsePipes(ValidationPipe)
-  // AddTasks(@Body() createTaskDTO: CreateTaskDto): Tasks {
-  //   return this.taskService.createTask(createTaskDTO);
-  // }
-   /**
    * @param id l'id de task qu'on veut voir
    * @returns renvoie le task selectionner de par son id
    */
   @Get('/:id')
-  getTask(@Param('id', ParseIntPipe) id: number): Promise<Task>{
+  getTask(@Param('id', ParseIntPipe) id: number): Promise<Task> {
     log(id);
     return this.taskService.getTaskByID(id);
+  }
+
+  /**
+   * @param createTaskDto task
+   * @returns task created
+   */
+  @Post()
+  createTask(@Body() createTaskDto: CreateTaskDto) {
+    log(createTaskDto);
+    return this.taskService.createTask(createTaskDto);
   }
   // /**
   //  * @param id Supprimer la tache selectionner par son id
