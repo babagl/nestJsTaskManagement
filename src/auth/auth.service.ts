@@ -47,8 +47,10 @@ export class AuthService {
       const user = await this.userRepo.findOne({ where: { username } });
       console.log(await user.validePassword(password));
       if (user && (await user.validePassword(password))) {
-        const payload: JwtPayload = { username };
-        const accessToken = await this.jwtService.sign(payload)
+        const payload: JwtPayload = {
+          username: user.username,
+        };
+        const accessToken = await this.jwtService.sign(payload);
         return { accessToken };
       } else {
         throw new UnauthorizedException('Invalide credential');
